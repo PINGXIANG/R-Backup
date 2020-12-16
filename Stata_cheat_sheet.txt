@@ -1,0 +1,23 @@
+order A B C
+local dir `c(pwd)'
+drop if -> not keep if
+
+substr(date,1,4) -> date[0:5]
+
+// Drop variables if all missing
+foreach var of varlist _all {
+    capture assert mi(`var')
+    if !_rc {
+       drop `var'
+    }
+}
+
+
+#get unique num
+by DMA, sort: gen nvals = _n == 1
+count if nvals
+
+
+gen STATE = substr(Original, strpos(Original, "Co.,")+5,strlen(Original))
+
+levelsof Station
